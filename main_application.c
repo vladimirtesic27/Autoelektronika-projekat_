@@ -47,7 +47,7 @@ static BaseType_t my_tsk;
 #define COM_CH_1 (1)
 
 /* TRASNMISSION DATA */
-static char trigger[20] = "POZDRAV\n";
+static char trigger[20] = "SENZOR\n";
 static char trigger1[30] = "";
 static char ispisr = 'A';
 static float_t minn = (float_t)0;
@@ -362,122 +362,6 @@ static void set_led_Task(void* pvParameters) {
 	
 }
 
-static void set_sev_seg_Task(void* pvParameters) {
-	poruka_s poruka;
-	uint8_t d;
-	uint16_t prom;
-
-	for (;;) {
-		if (xQueueReceive(sk_q1, &poruka.srvr, portMAX_DELAY) != pdTRUE) {
-
-		}
-
-		if (get_LED_BAR(3, &d) != 0) {
-			printf("Greska\n");
-		}
-		else {
-			if (((d) & ((uint8_t)(0x01))) != (uint8_t)0) {
-				printf("minimalna vrednost %.2f\n", minn);
-				prom = (uint16_t)minn;
-				if (select_7seg_digit((uint8_t)4) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)(prom / (uint16_t)1000)]) != pdTRUE) {
-
-				}
-				prom %= (uint16_t)1000;
-				if (select_7seg_digit((uint8_t)5) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)(prom / (uint16_t)100)]) != pdTRUE) {
-
-				}
-				prom %= (uint16_t)100;
-				if (select_7seg_digit((uint8_t)6) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)(prom / (uint16_t)10)]) != pdTRUE) {
-
-				}
-				prom %= (uint16_t)10;
-				if (select_7seg_digit((uint8_t)7) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)prom]) != pdTRUE) {
-
-				}
-				prom = (uint16_t)0;
-
-			}
-
-			if (((d) & ((uint8_t)(0x02))) != (uint8_t)0) {
-				printf("trenutna srvr %.2f\n", poruka.srvr);
-				prom = (uint16_t)poruka.srvr;
-				if (select_7seg_digit((uint8_t)4) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)(prom / (uint16_t)1000)]) != pdTRUE) {
-
-				}
-				prom %= (uint16_t)1000;
-				if (select_7seg_digit((uint8_t)5) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)(prom / (uint16_t)100)]) != pdTRUE) {
-
-				}
-				prom %= (uint16_t)100;
-				if (select_7seg_digit((uint8_t)6) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)(prom / (uint16_t)10)]) != pdTRUE) {
-
-				}
-				prom %= (uint16_t)10;
-				if (select_7seg_digit((uint8_t)7) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)prom]) != pdTRUE) {
-
-				}
-				prom = (uint16_t)0;
-			}
-
-			if (((d) & ((uint8_t)(0x04))) != (uint8_t)0) {
-				printf("max vrednost %.2f\n", maxx);
-				prom = (uint16_t)maxx;
-				if (select_7seg_digit((uint8_t)4) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)(prom / (uint16_t)1000)]) != pdTRUE) {
-
-				}
-				prom %= (uint16_t)1000;
-				if (select_7seg_digit((uint8_t)5) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)(prom / (uint16_t)100)]) != pdTRUE) {
-
-				}
-				prom %= (uint16_t)100;
-				if (select_7seg_digit((uint8_t)6) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)(prom / (uint16_t)10)]) != pdTRUE) {
-
-				}
-				prom %= (uint16_t)10;
-				if (select_7seg_digit((uint8_t)7) != pdTRUE) {
-
-				}
-				if (set_7seg_digit((uint8_t)hexnum[(uint8_t)prom]) != pdTRUE) {
-
-				}
-				prom = (uint16_t)0;
-			}
-		}
-	}
-}
 
 static void serialsend1_tsk(void* pvParameters) {
 	t_point1 = 0;
@@ -594,12 +478,6 @@ extern void main_demo(void)
 	}
 
 	
-
-    xVraceno = xTaskCreate(set_sev_seg_Task, "Stld", (uint16_t)((us_t)70), NULL, TASK_SERIAL_SEND_PRI, NULL);
-	if (xVraceno != pdPASS) {
-		
-	}
-
 
 	vTaskStartScheduler();
 
